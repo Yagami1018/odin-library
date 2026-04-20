@@ -1,85 +1,114 @@
+// Data structures
 const library = [];
+
 function Book(author, title, pages, isRead) {
-    const id = crypto.randomUUID();
+    this.id = crypto.randomUUID();
     this.author = author;
     this.title = title;
-    this.pages = pages || 0;
+    this.pages = Number.parseInt(pages) || 0;
     this.isRead = isRead;
 }
 
-const addBookToLibrary = book => {
-    library.push(book);
-    let card = document.createElement('div');
-    let fields = document.createElement('div');
-    fields.classList.add('fields');
-    let buttons = document.createElement('div');
-    buttons.classList.add('buttons');
-    let autor = document.createElement('div');
-    autor.classList.add('book-author');
-    let titulo = document.createElement('div');
-    titulo.classList.add('book-title');
-    let paginas = document.createElement('div');
-    paginas.classList.add('book-pages');
-    let reading = document.createElement('div');
-    reading.classList.add('book-reading');
-    let deleteBtn = document.createElement('button');
-    deleteBtn.classList.add('delete');
-    deleteBtn.textContent = 'Delete';
-    deleteBtn.addEventListener('click', () => {
-        card.remove();
-        console.log(library);
-        let index = library.indexOf(book);
-        library.splice(index, 1);
-    });
+// Utility functions
+const deleteBookFromLibrary = (book, card) => {
+    card.remove();
+    const index = library.indexOf(book);
+    library.splice(index, 1);
+};
 
-    let readBtn = document.createElement('button');
+const createBookCard = book => {
+    const card = document.createElement('div');
+    const fields = document.createElement('div');
+    const buttons = document.createElement('div');
+    const authorDiv = document.createElement('div');
+    const titleDiv = document.createElement('div');
+    const pagesDiv = document.createElement('div');
+    const readingDiv = document.createElement('div');
+    const deleteBtn = document.createElement('button');
+    const readBtn = document.createElement('button');
+
+    fields.classList.add('fields');
+    buttons.classList.add('buttons');
+    authorDiv.classList.add('book-author');
+    titleDiv.classList.add('book-title');
+    pagesDiv.classList.add('book-pages');
+    readingDiv.classList.add('book-reading');
+    deleteBtn.classList.add('delete');
     readBtn.classList.add('read');
+    card.classList.add('card');
+
     readBtn.textContent = 'Read';
+    deleteBtn.textContent = 'Delete';
+    authorDiv.textContent = `Author: ${book.author}`;
+    titleDiv.textContent = `Title: ${book.title}`;
+    pagesDiv.textContent = `Pages: ${book.pages}`;
+    readingDiv.textContent = `Reading: ${book.isRead ? 'Yes' : 'No'}`;
+
+    deleteBtn.addEventListener('click', () => deleteBookFromLibrary(book, card));
     readBtn.addEventListener('click', () => {
         book.isRead = !book.isRead;
-        reading.textContent = `Reading: ${book.isRead ? 'Yes' : 'No'}`;
+        readingDiv.textContent = `Reading: ${book.isRead ? 'Yes' : 'No'}`;
     });
 
-    buttons.classList.add('buttons');
-    let container = document.querySelector('.card-container');
-    autor.textContent = `Author: ${book.author}`;
-    titulo.textContent = `Title: ${book.title}`;
-    paginas.textContent = `Pages: ${book.pages}`;
-    reading.textContent = `Reading: ${book.isRead ? 'Yes' : 'No'}`;
-    fields.appendChild(autor);
-    fields.appendChild(titulo);
-    fields.appendChild(paginas);
-    fields.appendChild(reading);
-    card.classList.add('card');
+    fields.appendChild(authorDiv);
+    fields.appendChild(titleDiv);
+    fields.appendChild(pagesDiv);
+    fields.appendChild(readingDiv);
     card.appendChild(fields);
     buttons.appendChild(deleteBtn);
     buttons.appendChild(readBtn);
     card.appendChild(buttons);
+
+    return card;
+};
+
+const addBookToLibrary = book => {
+    library.push(book);
+    const container = document.querySelector('.card-container');
+    const card = createBookCard(book);
     container.appendChild(card);
 };
 
-const author = document.getElementById('author');
-const title = document.getElementById('title');
-const pages = document.getElementById('pages');
-const reading = document.getElementById('reading');
+// DOM element references
+const authorInput = document.getElementById('author');
+const titleInput = document.getElementById('title');
+const pagesInput = document.getElementById('pages');
+const readingInput = document.getElementById('reading');
 const addBtn = document.querySelector('.add');
 const resetBtn = document.querySelector('.reset');
 const sidebar = document.querySelector('.sidebar');
-const newBook = document.querySelector('.new-book');
+const newBookBtn = document.querySelector('.new-book');
 
+// Event listeners
 addBtn.addEventListener('click', e => {
     e.preventDefault();
-    const newBook = new Book(author.value, title.value, pages.value, reading.checked);
+    const author = authorInput.value.trim();
+    const title = titleInput.value.trim();
+    const pages = pagesInput.value.trim();
+
+    if (!author || !title) {
+        alert('Please enter both author and title.');
+        return;
+    }
+
+    const newBook = new Book(author, title, pages, readingInput.checked);
     addBookToLibrary(newBook);
-    console.log(library);
+
+    // Clear form after adding
+    authorInput.value = '';
+    titleInput.value = '';
+    pagesInput.value = '';
+    readingInput.checked = false;
 });
+
 resetBtn.addEventListener('click', e => {
     e.preventDefault();
-    author.value = '';
-    title.value = '';
-    pages.value = 0;
-    reading.checked = false;
+    authorInput.value = '';
+    titleInput.value = '';
+    pagesInput.value = '';
+    readingInput.checked = false;
 });
-newBook.addEventListener('click', e => {
+
+newBookBtn.addEventListener('click', e => {
     sidebar.style.display = 'flex';
 });
