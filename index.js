@@ -1,19 +1,48 @@
 // Data structures
-const library = [];
+class Book {
+    constructor(author, title, pages, isRead) {
+        this.id = crypto.randomUUID();
+        this.author = author;
+        this.title = title;
+        this.pages = Number.parseInt(pages) || 0;
+        this.isRead = isRead;
+    }
 
-function Book(author, title, pages, isRead) {
-    this.id = crypto.randomUUID();
-    this.author = author;
-    this.title = title;
-    this.pages = Number.parseInt(pages) || 0;
-    this.isRead = isRead;
+    toggleRead() {
+        this.isRead = !this.isRead;
+    }
 }
+
+class Library {
+    constructor() {
+        this.books = [];
+    }
+
+    add(book) {
+        this.books.push(book);
+    }
+
+    remove(book) {
+        const index = this.books.indexOf(book);
+        if (index > -1) {
+            this.books.splice(index, 1);
+        }
+    }
+}
+
+const library = new Library();
 
 // Utility functions
 const deleteBookFromLibrary = (book, card) => {
     card.remove();
-    const index = library.indexOf(book);
-    library.splice(index, 1);
+    library.remove(book);
+};
+
+const clearForm = () => {
+    authorInput.value = '';
+    titleInput.value = '';
+    pagesInput.value = '';
+    readingInput.checked = false;
 };
 
 const createBookCard = book => {
@@ -46,7 +75,7 @@ const createBookCard = book => {
 
     deleteBtn.addEventListener('click', () => deleteBookFromLibrary(book, card));
     readBtn.addEventListener('click', () => {
-        book.isRead = !book.isRead;
+        book.toggleRead();
         readingDiv.textContent = `Reading: ${book.isRead ? 'Yes' : 'No'}`;
     });
 
@@ -63,7 +92,7 @@ const createBookCard = book => {
 };
 
 const addBookToLibrary = book => {
-    library.push(book);
+    library.add(book);
     const container = document.querySelector('.card-container');
     const card = createBookCard(book);
     container.appendChild(card);
@@ -93,20 +122,12 @@ addBtn.addEventListener('click', e => {
 
     const newBook = new Book(author, title, pages, readingInput.checked);
     addBookToLibrary(newBook);
-
-    // Clear form after adding
-    authorInput.value = '';
-    titleInput.value = '';
-    pagesInput.value = '';
-    readingInput.checked = false;
+    clearForm();
 });
 
 resetBtn.addEventListener('click', e => {
     e.preventDefault();
-    authorInput.value = '';
-    titleInput.value = '';
-    pagesInput.value = '';
-    readingInput.checked = false;
+    clearForm();
 });
 
 newBookBtn.addEventListener('click', e => {
