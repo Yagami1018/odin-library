@@ -13,27 +13,38 @@ body {
     display: flex;
     gap: 20px;
 }
-.form{
-font-size: 24px;
+.form {
+    font-size: 24px;
 }
+
 .sidebar {
-    display: flex;
+    display: none;
     flex-shrink: 0;
     align-items: center;
     background-color: hsl(0, 0%, 95%);
-    height: 100vh;
+    min-height: 100vh;
     padding: 10px;
     border-right: 1px solid rgba(0, 0, 0, 0.39);
 }
-.buttons{
+.buttons {
+    display: flex;
+    gap: 10px;
     align-self: center;
 }
 .labels {
     display: flex;
     justify-content: space-between;
 }
-.labels.reading{
+input {
+    text-align: center;
+    font-size: 20px;
+    width: 200px;
+}
+.labels.reading {
     justify-content: start;
+}
+#reading {
+    justify-self: start;
 }
 .sidebar .fields {
     display: flex;
@@ -56,6 +67,7 @@ font-size: 24px;
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: 100vw;
     gap: 20px;
 }
 .card-container {
