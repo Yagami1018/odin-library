@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Library</title>
         <link rel="stylesheet" href="style.css" />
-        <script src="index.js" defer></script>
+        <script  src="index.js" defer></script>
     </head>
     <body>
         <div class="container">
@@ -14,15 +14,15 @@
                     <div class="fields">
                         <div class="labels">
                             <label for="author">Author: </label>
-                            <input type="text" name="" id="author" />
+                            <input type="text" name="" required id="author" />
                         </div>
                         <div class="labels">
                             <label for="title">Title: </label>
-                            <input type="text" name="" id="title" />
+                            <input type="text" name="" required id="title" />
                         </div>
                         <div class="labels">
                             <label for="pages">Pages:</label>
-                            <input type="number" name="" id="pages" value="0" />
+                            <input type="number" name="" required id="pages" min="50" value="0" />
                         </div>
                         <div class="labels reading">
                             <label for="reading">Reading:</label>
@@ -30,7 +30,7 @@
                         </div>
                     </div>
                     <div class="buttons">
-                        <button class="add">Add</button>
+                        <button type="submit" class="add">Add</button>
                         <button class="reset">Reset</button>
                     </div>
                 </form>

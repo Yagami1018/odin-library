@@ -39,44 +39,46 @@ const deleteBookFromLibrary = (book, card) => {
 };
 
 const clearForm = () => {
-    authorInput.value = '';
-    titleInput.value = '';
-    pagesInput.value = '';
+    authorInput.value = "";
+    titleInput.value = "";
+    pagesInput.value = "";
     readingInput.checked = false;
 };
 
-const createBookCard = book => {
-    const card = document.createElement('div');
-    const fields = document.createElement('div');
-    const buttons = document.createElement('div');
-    const authorDiv = document.createElement('div');
-    const titleDiv = document.createElement('div');
-    const pagesDiv = document.createElement('div');
-    const readingDiv = document.createElement('div');
-    const deleteBtn = document.createElement('button');
-    const readBtn = document.createElement('button');
+const createBookCard = (book) => {
+    const card = document.createElement("div");
+    const fields = document.createElement("div");
+    const buttons = document.createElement("div");
+    const authorDiv = document.createElement("div");
+    const titleDiv = document.createElement("div");
+    const pagesDiv = document.createElement("div");
+    const readingDiv = document.createElement("div");
+    const deleteBtn = document.createElement("button");
+    const readBtn = document.createElement("button");
 
-    fields.classList.add('fields');
-    buttons.classList.add('buttons');
-    authorDiv.classList.add('book-author');
-    titleDiv.classList.add('book-title');
-    pagesDiv.classList.add('book-pages');
-    readingDiv.classList.add('book-reading');
-    deleteBtn.classList.add('delete');
-    readBtn.classList.add('read');
-    card.classList.add('card');
+    fields.classList.add("fields");
+    buttons.classList.add("buttons");
+    authorDiv.classList.add("book-author");
+    titleDiv.classList.add("book-title");
+    pagesDiv.classList.add("book-pages");
+    readingDiv.classList.add("book-reading");
+    deleteBtn.classList.add("delete");
+    readBtn.classList.add("read");
+    card.classList.add("card");
 
-    readBtn.textContent = 'Read';
-    deleteBtn.textContent = 'Delete';
+    readBtn.textContent = "Read";
+    deleteBtn.textContent = "Delete";
     authorDiv.textContent = `Author: ${book.author}`;
     titleDiv.textContent = `Title: ${book.title}`;
     pagesDiv.textContent = `Pages: ${book.pages}`;
-    readingDiv.textContent = `Reading: ${book.isRead ? 'Yes' : 'No'}`;
+    readingDiv.textContent = `Reading: ${book.isRead ? "Yes" : "No"}`;
 
-    deleteBtn.addEventListener('click', () => deleteBookFromLibrary(book, card));
-    readBtn.addEventListener('click', () => {
+    deleteBtn.addEventListener("click", () =>
+        deleteBookFromLibrary(book, card),
+    );
+    readBtn.addEventListener("click", () => {
         book.toggleRead();
-        readingDiv.textContent = `Reading: ${book.isRead ? 'Yes' : 'No'}`;
+        readingDiv.textContent = `Reading: ${book.isRead ? "Yes" : "No"}`;
     });
 
     fields.appendChild(authorDiv);
@@ -91,33 +93,43 @@ const createBookCard = book => {
     return card;
 };
 
-const addBookToLibrary = book => {
+const addBookToLibrary = (book) => {
     library.add(book);
-    const container = document.querySelector('.card-container');
+    const container = document.querySelector(".card-container");
     const card = createBookCard(book);
     container.appendChild(card);
 };
 
 // DOM element references
-const authorInput = document.getElementById('author');
-const titleInput = document.getElementById('title');
-const pagesInput = document.getElementById('pages');
-const readingInput = document.getElementById('reading');
-const addBtn = document.querySelector('.add');
-const resetBtn = document.querySelector('.reset');
-const sidebar = document.querySelector('.sidebar');
-const newBookBtn = document.querySelector('.new-book');
+const authorInput = document.getElementById("author");
+const titleInput = document.getElementById("title");
+const pagesInput = document.getElementById("pages");
+const readingInput = document.getElementById("reading");
+const addBtn = document.querySelector(".add");
+const resetBtn = document.querySelector(".reset");
+const sidebar = document.querySelector(".sidebar");
+const newBookBtn = document.querySelector(".new-book");
+const form = document.querySelector('form')
 
 // Event listeners
-addBtn.addEventListener('click', e => {
+addBtn.addEventListener("click", (e) => {
     e.preventDefault();
     const author = authorInput.value.trim();
     const title = titleInput.value.trim();
     const pages = pagesInput.value.trim();
 
-    if (!author || !title) {
-        alert('Please enter both author and title.');
-        return;
+    if (authorInput.validity.valueMissing) {
+        authorInput.setCustomValidity('Debes introducir el autor')
+        authorInput.reportValidity();
+        return
+    } else if (titleInput.validity.valueMissing) {
+        titleInput.setCustomValidity('Debes introducir el titulo')
+        titleInput.reportValidity();
+        return
+    } else if (pagesInput.value < 50) {
+        pagesInput.setCustomValidity('El numero de paginas no puede ser menor a 50')
+        pagesInput.reportValidity();
+        return
     }
 
     const newBook = new Book(author, title, pages, readingInput.checked);
@@ -125,11 +137,11 @@ addBtn.addEventListener('click', e => {
     clearForm();
 });
 
-resetBtn.addEventListener('click', e => {
+resetBtn.addEventListener("click", (e) => {
     e.preventDefault();
     clearForm();
 });
 
-newBookBtn.addEventListener('click', e => {
-    sidebar.style.display = 'flex';
+newBookBtn.addEventListener("click", (e) => {
+    sidebar.style.display = "flex";
 });
